@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資學習計畫 - 單頁式簡報</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+            line-height: 1.75;
+            color: #2c3e50;
+            background: #f8f9fa;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            opacity: 0.4;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            animation: fadeInDown 1s ease-out;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang TC", sans-serif;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4em;
+            opacity: 0.95;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero .scroll-hint {
+            margin-top: 60px;
+            font-size: 0.9em;
+            opacity: 0.6;
+            animation: bounce 2s infinite;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 60px 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section h2 {
+            font-size: 2em;
+            color: #1e3c72;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            font-family: "SF Pro Display", -apple-system, "PingFang TC", sans-serif;
+        }
+
+        .section h3 {
+            font-size: 1.5em;
+            color: #2a5298;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section h4 {
+            font-size: 1.15em;
+            color: #495057;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .section p {
+            font-size: 1.05em;
+            margin-bottom: 15px;
+            color: #495057;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section ul li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            font-size: 1.02em;
+            font-weight: 400;
+            color: #495057;
+        }
+
+        .section ul li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #2a5298;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 28px;
+            border-radius: 8px;
+            border-left: 4px solid #2a5298;
+            border: 1px solid #e9ecef;
+        }
+
+        .card h4 {
+            color: #1e3c72;
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .cycle-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            margin: 50px auto;
+        }
+
+        .cycle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .cycle-center-circle {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 24px rgba(30, 60, 114, 0.3);
+        }
+
+        .cycle-center-circle .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .cycle-center-circle .text {
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .step-cycle-item {
+            position: absolute;
+            width: 180px;
+            background: white;
+            border: 2px solid #2a5298;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .step-cycle-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(42, 82, 152, 0.2);
+            border-color: #1e3c72;
+        }
+
+        .step-cycle-item .step-number {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-family: "SF Pro Display", -apple-system, sans-serif;
+        }
+
+        .step-cycle-item h4 {
+            color: #1e3c72;
+            margin: 10px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .step-cycle-item p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        /* 四個步驟的位置 */
+        .step-1 {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step-2 {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .step-3 {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step-4 {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        /* 箭頭 */
+        .arrow {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            z-index: 5;
+        }
+
+        .arrow svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .arrow-1 {
+            top: 15%;
+            right: 15%;
+            transform: rotate(45deg);
+        }
+
+        .arrow-2 {
+            bottom: 15%;
+            right: 15%;
+            transform: rotate(135deg);
+        }
+
+        .arrow-3 {
+            bottom: 15%;
+            left: 15%;
+            transform: rotate(225deg);
+        }
+
+        .arrow-4 {
+            top: 15%;
+            left: 15%;
+            transform: rotate(315deg);
+        }
+
+        @media (max-width: 768px) {
+            .cycle-container {
+                width: 100%;
+                height: auto;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .step-cycle-item {
+                position: relative !important;
+                width: 100% !important;
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+            }
+
+            .cycle-center {
+                position: relative;
+                transform: none;
+                margin-bottom: 20px;
+            }
+
+            .arrow {
+                display: none;
+            }
+        }
+
+        .highlight-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2a5298;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 6px;
+            border: 1px solid #c5dbf5;
+        }
+
+        .highlight-box strong {
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .outcomes {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .outcomes ol {
+            padding-left: 25px;
+        }
+
+        .outcomes li {
+            padding: 10px 0;
+            font-size: 1.05em;
+            font-weight: 400;
+            color: #495057;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>投資學習計畫</h1>
+            <p class="subtitle">透過歷史數據觀察價格變化，有根據的預測未來</p>
+            <p class="scroll-hint">↓ 向下滾動查看完整計畫 ↓</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 第一章：學習目的 -->
+        <div class="section">
+            <h2>一、學習目的</h2>
+            <p style="font-size: 1.15em; color: #2a5298; font-weight: 600; margin-bottom: 25px;">建立一套「看得懂市場在幹嘛」的能力</p>
+            <ul>
+                <li>提升投資知識吸收速度與解讀能力</li>
+                <li>建立可重複使用的投資分析框架</li>
+                <li>提供可供驗證的市場理解</li>
+                <li>快速理解常用專業術語</li>
+            </ul>
+        </div>
+
+        <!-- 第二章：核心投資觀點 -->
+        <div class="section">
+            <h2>二、核心投資觀點</h2>
+            <div class="highlight-box">
+                <strong>投資的目的 = 有效累積資本 + 獲得穩定現金流</strong>
+            </div>
+            <p>把複雜的市場簡化成三個核心變數：</p>
+
+            <div class="two-column">
+                <div class="card">
+                    <h4>1. 經濟成長與企業獲利</h4>
+                    <p><strong>總體層面 - GDP（經濟大餅）</strong></p>
+                    <ul>
+                        <li>反映整體經濟是擴張還是收縮</li>
+                        <li>決定市場整體的成長空間</li>
+                    </ul>
+                    <p><strong>企業層面 - Earnings（切到多少餅）</strong></p>
+                    <ul>
+                        <li>各產業跟個別企業的真實賺錢能力</li>
+                        <li>是看懂股市最關鍵的變數</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>2. 利率（決定資金供給與估值）</h4>
+                    <ul>
+                        <li>被通膨、就業、市場預期影響</li>
+                        <li>主導股票估值、債券價格、美元強弱</li>
+                        <li>重點關注：CPI、失業率、FOMC 會議</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h4>3. 資金流向（市場情緒）</h4>
+                <ul>
+                    <li>反映市場風險偏好跟資金配置變化</li>
+                    <li>決定短期價格波動跟資產輪動</li>
+                    <li>重點關注：股債基金流入流出、VIX、信用利差</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <strong>核心假設：</strong>觀察「經濟成長 + 企業獲利 + 利率 + 資金流向」能解釋大部分的股債市場變化
+            </div>
+        </div>
+
+        <!-- 第三章：監測的主要市場 -->
+        <div class="section">
+            <h2>三、監測的主要市場</h2>
+            <div class="two-column">
+                <div class="card">
+                    <h4>股票市場（累積資本主力）</h4>
+                    <p><strong>觀察指標：</strong>EPS 預估、估值、資金流、產業輪動</p>
+                    <p><strong>標的範圍：</strong>全球型 / 區域型 / 單一國家</p>
+                    <p><strong>投資風格：</strong>成長 vs 價值</p>
+                </div>
+
+                <div class="card">
+                    <h4>債券市場（穩定現金流主力）</h4>
+                    <p><strong>觀察指標：</strong>殖利率變化、通膨預期、信用風險</p>
+                    <p><strong>標的範圍：</strong>投資級 / 高收益 / 政府債</p>
+                    <p><strong>天期選擇：</strong>短中長天期</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第四章：建立分析框架 -->
+        <div class="section">
+            <h2>四、建立分析框架（四步驟循環）</h2>
+            
+            <div class="cycle-container">
+                <!-- 中心圓圈 -->
+                <div class="cycle-center">
+                    <div class="cycle-center-circle">
+                        <div class="icon">🔄</div>
+                        <div class="text">持續循環<br>優化框架</div>
+                    </div>
+                </div>
+
+                <!-- 步驟 1 -->
+                <div class="step-cycle-item step-1">
+                    <div class="step-number">步驟 1</div>
+                    <h4>收集資料</h4>
+                    <p>收集總經、獲利、利率、資金流向</p>
+                </div>
+
+                <!-- 步驟 2 -->
+                <div class="step-cycle-item step-2">
+                    <div class="step-number">步驟 2</div>
+                    <h4>建立模型</h4>
+                    <p>套進景氣、利率、資金面框架</p>
+                </div>
+
+                <!-- 步驟 3 -->
+                <div class="step-cycle-item step-3">
+                    <div class="step-number">步驟 3</div>
+                    <h4>解釋價格</h4>
+                    <p>解讀股債市場為什麼這樣走</p>
+                </div>
+
+                <!-- 步驟 4 -->
+                <div class="step-cycle-item step-4">
+                    <div class="step-number">步驟 4</div>
+                    <h4>驗證與調整</h4>
+                    <p>記錄判斷、識別盲點</p>
+                </div>
+
+                <!-- 箭頭 -->
+                <div class="arrow arrow-2">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 20 50 L 80 50" stroke="#2a5298" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 80 50 L 65 40 M 80 50 L 65 60" stroke="#2a5298" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="arrow arrow-3">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 20 50 L 80 50" stroke="#2a5298" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 80 50 L 65 40 M 80 50 L 65 60" stroke="#2a5298" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="arrow arrow-4">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M 20 50 L 80 50" stroke="#667eea" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <path d="M 80 50 L 65 40 M 80 50 L 65 60" stroke="#667eea" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 50px;">步驟一：收集資料（Collect）</h3>
+            <div class="card">
+                <h4>要收集什麼：</h4>
+                <ul>
+                    <li><strong>總體經濟：</strong>GDP 成長率、PMI、消費數據</li>
+                    <li><strong>通膨就業：</strong>CPI、PPI、非農就業、失業率</li>
+                    <li><strong>企業獲利：</strong>S&P 500 EPS 預估、主要產業財報</li>
+                    <li><strong>利率政策：</strong>聯準會點陣圖、殖利率曲線</li>
+                    <li><strong>資金流向：</strong>股債基金流入流出、VIX、信用利差</li>
+                </ul>
+                <h4 style="margin-top: 20px;">資料哪裡找：</h4>
+                <ul>
+                    <li><strong>總經數據：</strong>Fed 官網、FRED 資料庫、各國統計局</li>
+                    <li><strong>企業獲利：</strong>Bloomberg、FactSet、券商研究報告</li>
+                    <li><strong>資金流向：</strong>EPFR、ICI、各大交易所數據</li>
+                </ul>
+            </div>
+
+            <h3>步驟二：建立模型（Frame）</h3>
+            <p>把資料套進固定框架思考：</p>
+            <div class="two-column" style="margin-top: 20px;">
+                <div class="card">
+                    <h4>A. 景氣面</h4>
+                    <ul>
+                        <li>GDP & 企業獲利：上行、下行、持平？</li>
+                        <li>哪些國家或產業強？哪些疲弱？</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>B. 利率面</h4>
+                    <ul>
+                        <li>殖利率往哪走？升息還是降息？</li>
+                        <li>對股債估值的影響是正面還是負面？</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <h4>C. 資金面（Flow）</h4>
+                <ul>
+                    <li>錢往哪流？股票、債券、黃金、現金？</li>
+                    <li>風險偏好是上升還是下降？</li>
+                </ul>
+            </div>
+
+            <h3>步驟三：解釋價格（Explain）</h3>
+            <p><strong>把框架跟實際價格對起來看：</strong></p>
+            <div class="card">
+                <h4>1. 為什麼股市漲/跌？</h4>
+                <ul>
+                    <li>企業獲利變好/變差？(景氣面)</li>
+                    <li>估值被拉高/壓低？(利率面)</li>
+                    <li>資金流入/流出？(資金面)</li>
+                </ul>
+                <h4>2. 為什麼債市漲/跌？</h4>
+                <ul>
+                    <li>殖利率往上/往下？(利率面)</li>
+                    <li>市場搶避險/追求風險？(資金面)</li>
+                </ul>
+                <h4>3. 哪個因素是主導？</h4>
+                <ul>
+                    <li>這波行情主要是獲利推動還是估值推動？</li>
+                    <li>框架能解釋多少？有沒有解釋不了的異常？</li>
+                </ul>
+            </div>
+
+            <h3>步驟四：驗證與調整（Validate）</h3>
+            <div class="two-column" style="margin-top: 20px;">
+                <div class="card">
+                    <h4>記錄判斷</h4>
+                    <ul>
+                        <li>定期寫下自己的判斷</li>
+                        <li>事後對照實際結果</li>
+                        <li>每季或半年檢討一次</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>識別盲點</h4>
+                    <ul>
+                        <li>框架解釋不了的事件特別記錄</li>
+                        <li>思考是框架要調整還是黑天鵝</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第五章：測試範例 -->
+        <div class="section">
+            <h2>五、測試範例：利率轉折點分析</h2>
+            
+            <div class="highlight-box">
+                <strong>研究問題：</strong>在聯準會利率轉折點前後進場 S&P 500，哪個時機點報酬率最好？
+            </div>
+
+            <h3>29 個利率轉折點（2000-2024）</h3>
+            <div style="text-align: center; margin: 30px 0;">
+                <img src="利率路徑與轉折點_20251130_185038.png" alt="利率轉折點路徑圖" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em; font-style: italic;">
+                    自動偵測 29 個轉折點：6次升息啟動、6次升息暫停、9次降息啟動、8次降息暫停
+                </p>
+            </div>
+
+            <h3>回測結果：87 個情境完整統計</h3>
+            
+            <h4 style="color: #2a5298; margin-top: 25px;">按進場時機分析（所有轉折點平均）</h4>
+            <table style="width: 100%; margin: 20px 0; border-collapse: collapse; font-size: 0.9em;">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
+                        <th style="padding: 10px; text-align: left;">進場時機</th>
+                        <th style="padding: 10px; text-align: center;">平均6月報酬</th>
+                        <th style="padding: 10px; text-align: center;">6月勝率</th>
+                        <th style="padding: 10px; text-align: center;">平均12月報酬</th>
+                        <th style="padding: 10px; text-align: center;">12月勝率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #e9ecef;">
+                        <td style="padding: 8px;">轉折前3個月</td>
+                        <td style="padding: 8px; text-align: center;">1.49%</td>
+                        <td style="padding: 8px; text-align: center;">60.7%</td>
+                        <td style="padding: 8px; text-align: center;">6.48%</td>
+                        <td style="padding: 8px; text-align: center;">66.7%</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e9ecef;">
+                        <td style="padding: 8px;">轉折當月</td>
+                        <td style="padding: 8px; text-align: center;">2.12%</td>
+                        <td style="padding: 8px; text-align: center;">71.4%</td>
+                        <td style="padding: 8px; text-align: center;">7.95%</td>
+                        <td style="padding: 8px; text-align: center;">66.7%</td>
+                    </tr>
+                    <tr style="background: #e7f3ff;">
+                        <td style="padding: 8px;"><strong>轉折後3個月 ⭐</strong></td>
+                        <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: bold;">4.37%</td>
+                        <td style="padding: 8px; text-align: center;">66.7%</td>
+                        <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: bold;">9.98%</td>
+                        <td style="padding: 8px; text-align: center; color: #27ae60; font-weight: bold;">76.9%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4 style="color: #2a5298; margin-top: 35px;">按轉折類型分析（12個月報酬率）</h4>
+            <div class="two-column" style="margin-top: 20px;">
+                <div class="card">
+                    <h4>🔺 升息啟動（6次）</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+                        <li style="padding: 5px 0;">轉折前: <span style="color: #e74c3c;">-4.09%</span></li>
+                        <li style="padding: 5px 0;">轉折當月: <span style="color: #666;">0.52%</span></li>
+                        <li style="padding: 5px 0;"><strong>轉折後: <span style="color: #27ae60;">4.51%</span> ⭐</strong></li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">經濟過熱→升息壓抑→等確認後較安全</p>
+                </div>
+                <div class="card">
+                    <h4>🟧 升息暫停（6次）</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+                        <li style="padding: 5px 0;">轉折前: <span style="color: #27ae60;">14.13%</span></li>
+                        <li style="padding: 5px 0;">轉折當月: <span style="color: #27ae60;">9.26%</span></li>
+                        <li style="padding: 5px 0;"><strong>轉折後: <span style="color: #27ae60;">9.57%</span></strong></li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">緊縮結束→資金回流→三種時機都不錯</p>
+                </div>
+                <div class="card">
+                    <h4>🔻 降息啟動（9次）</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+                        <li style="padding: 5px 0;">轉折前: <span style="color: #e74c3c;">-1.36%</span></li>
+                        <li style="padding: 5px 0;">轉折當月: <span style="color: #666;">2.31%</span></li>
+                        <li style="padding: 5px 0;"><strong>轉折後: <span style="color: #27ae60;">11.24%</span> ⭐</strong></li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">經濟轉弱→等恐慌消化→反彈力道最強</p>
+                </div>
+                <div class="card">
+                    <h4>🟩 降息暫停（8次）</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em;">
+                        <li style="padding: 5px 0;">轉折前: <span style="color: #27ae60;">15.95%</span></li>
+                        <li style="padding: 5px 0;">轉折當月: <span style="color: #27ae60;">17.64%</span></li>
+                        <li style="padding: 5px 0;"><strong>轉折後: <span style="color: #27ae60;">16.38%</span></strong></li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">最差已過→復甦開始→三種時機都好</p>
+                </div>
+            </div>
+
+            <h3>為什麼「轉折後3個月」表現最好？</h3>
+            <div class="two-column" style="margin-top: 20px;">
+                <div class="card">
+                    <h4>✓ 優勢一：趨勢確認</h4>
+                    <p>等待3個月後，利率政策方向已明確，市場對未來預期趨於一致，減少假訊號。</p>
+                </div>
+                <div class="card">
+                    <h4>✓ 優勢二：避開恐慌</h4>
+                    <p>在極端情況（如 2008 金融危機），提前進場會接到「下跌的刀」，等待確認能避開最慘時期。</p>
+                </div>
+                <div class="card">
+                    <h4>✓ 優勢三：心理可行</h4>
+                    <p>雖然錯過最低點，但趨勢明確時進場，心理壓力較小，更容易執行且持有。</p>
+                </div>
+                <div class="card">
+                    <h4>✓ 優勢四：數據支持</h4>
+                    <p>勝率從 66.7% 提升至 76.9%，平均報酬從 6.48% 提升至 9.98%，數據差異顯著。</p>
+                </div>
+            </div>
+
+            <h3>典型案例解讀</h3>
+            <div class="card" style="margin-top: 20px;">
+                <h4>案例一：2009-03 降息暫停（金融海嘯底部）</h4>
+                <p><strong>轉折當月進場：</strong>2009-03-02 進場 $700.82 → 12個月後 $1118.31 = <span style="color: #27ae60; font-weight: 600;">+59.57%</span></p>
+                <p style="margin-top: 10px; color: #495057;"><strong>為什麼表現好？</strong>聯準會降息至 0.18% 並暫停，代表「不再更差了」，市場極度悲觀後反彈力道強勁。</p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h4>案例二：2008-09 降息啟動（雷曼危機）</h4>
+                <p><strong>轉折當月進場：</strong>2008-09-02 進場 $1277.58 → 6個月後 $700.82 = <span style="color: #e74c3c; font-weight: 600;">-45.14%</span></p>
+                <p style="margin-top: 10px; color: #495057;"><strong>為什麼失敗？</strong>降息啟動代表「經濟出問題了」，但金融系統性風險尚未解除，恐慌還在擴散。</p>
+                <p style="margin-top: 8px; color: #2a5298;"><strong>→ 若等3個月：</strong>2008-12-01 進場 $816.21 → 12個月後 $1108.86 = <span style="color: #27ae60; font-weight: 600;">+35.85%</span></p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h4>案例三：2020-02 降息暫停（COVID 前夕）</h4>
+                <p><strong>轉折後3個月：</strong>2020-05-01 進場 $2830.71 → 12個月後 $4192.66 = <span style="color: #27ae60; font-weight: 600;">+48.11%</span></p>
+                <p style="margin-top: 10px; color: #495057;"><strong>為什麼表現好？</strong>3個月後市場已從恐慌中恢復，聯準會無限 QE 啟動，流動性氾濫推動股市。</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #fff5e6 0%, #ffe0b2 100%); border-left: 4px solid #ff9800; padding: 25px; margin: 30px 0; border-radius: 8px;">
+                <h4 style="color: #f57c00; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+                    💡 核心洞察
+                </h4>
+                <p><strong>不是「越早越好」，而是「趨勢確認後再動」</strong></p>
+                <ul style="margin-top: 15px;">
+                    <li><strong>降息啟動</strong> = 經濟轉弱訊號，需等市場消化壞消息</li>
+                    <li><strong>降息暫停</strong> = 最差時期過去，反彈機會最大</li>
+                    <li><strong>升息啟動</strong> = 經濟過熱警訊，短期修正風險</li>
+                    <li><strong>升息暫停</strong> = 緊縮週期結束，資金回流股市</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; padding: 30px; background: #f8f9fa; border-radius: 8px;">
+                <p style="font-size: 1.2em; color: #2a5298; margin-bottom: 20px;">
+                    <strong>📁 完整分析報告</strong>
+                </p>
+                <a href="實戰範例_利率轉折分析.html" style="display: inline-block; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 15px 40px; border-radius: 8px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3); transition: all 0.3s ease;">
+                    查看 87 筆完整交易明細 →
+                </a>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    包含：所有轉折點圖表 | 報酬率熱力圖 | 可驗證進出場價格 | Python 程式碼
+                </p>
+            </div>
+        </div>
+
+        <!-- 第六章：預期成果 -->
+        <div class="section">
+            <h2>六、預期成果</h2>
+            <div class="outcomes">
+                <ol>
+                    <li>透過回測歷史數據建立背景知識</li>
+                    <li>建立可重複使用的分析框架</li>
+                    <li>能解釋股債價格的主要變化原因</li>
+                    <li>更新資料後能在短時間更新對市場的看法</li>
+                    <li>知道自己判斷的準確度，持續優化</li>
+                    <li><strong style="color: #1e3c72;">最重要：不被市場噪音干擾，有自己的判斷邏輯</strong></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>投資學習計畫 | 最後更新：2025年11月29日</p>
+    </div>
+
+    <script>
+        // 平滑滾動效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 為所有區塊添加淡入效果
+            const sections = document.querySelectorAll('.section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.8s ease-out';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

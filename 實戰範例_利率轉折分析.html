@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試範例：利率轉折點分析 - 投資學習計畫</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+            line-height: 1.75;
+            color: #2c3e50;
+            background: #f8f9fa;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            color: #1e3c72;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .section h3 {
+            font-size: 1.4em;
+            color: #2a5298;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section h4 {
+            font-size: 1.15em;
+            color: #495057;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .section p, .section li {
+            font-size: 1.05em;
+            color: #495057;
+            line-height: 1.8;
+        }
+
+        .framework-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #2a5298;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(42, 82, 152, 0.2);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .step-card h4 {
+            color: #1e3c72;
+            margin-top: 0;
+        }
+
+        .step-card p {
+            font-size: 0.95em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .highlight-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2a5298;
+            padding: 24px;
+            margin: 25px 0;
+            border-radius: 6px;
+        }
+
+        .highlight-box strong {
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .image-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .results-table {
+            width: 100%;
+            margin: 25px 0;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        .results-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .results-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .positive {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .negative {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .insight-box h4 {
+            color: #f57c00;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-box h4::before {
+            content: "💡";
+            font-size: 1.5em;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .example-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .example-card h5 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .example-card .date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .example-card .price {
+            font-size: 0.95em;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .verification-section {
+            background: #f0f8ff;
+            border: 2px dashed #2a5298;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .framework-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>測試範例：利率轉折點分析</h1>
+            <p class="subtitle">模擬數據回測</p>
+            <div class="badge">數據回測 | 2000-2024 共 29 個轉折點</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 分析目標 -->
+        <div class="section">
+            <h2>📊 分析目標</h2>
+            <p>透過數據回測嘗試尋找：</p>
+            <div class="highlight-box">
+                <strong>「在聯準會利率轉折點前後進場 S&P 500，哪個時機點報酬率最好?」</strong>
+            </div>
+            <p>這個分析完整展示了學習計畫中的<strong>四步驟框架</strong>如何實際運作。</p>
+        </div>
+
+        <!-- 四步驟框架 -->
+        <div class="section">
+            <h2>🔄 四步驟分析框架</h2>
+            <div class="framework-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>收集資料</h4>
+                    <p>FRED 利率數據<br>S&P 500 歷史價格</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>建立模型</h4>
+                    <p>自動偵測轉折點<br>定義四種類型</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>解釋價格</h4>
+                    <p>計算報酬率<br>比較進場時機</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4>驗證調整</h4>
+                    <p>檢視每筆交易<br>找出規律</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步驟一：收集資料 -->
+        <div class="section">
+            <h2>步驟一：收集資料（Collect）</h2>
+            <h3>資料來源</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">24,595</div>
+                    <div class="stat-label">S&P 500 日線資料</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">310</div>
+                    <div class="stat-label">FRED 月度利率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25 年</div>
+                    <div class="stat-label">分析時間範圍</div>
+                </div>
+            </div>
+
+            <h3>資料來源說明</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="padding: 8px 0;">✓ <strong>S&P 500:</strong> 使用 yfinance 抓取 ^GSPC 的歷史收盤價</li>
+                <li style="padding: 8px 0;">✓ <strong>聯準會利率:</strong> FRED API 的 FEDFUNDS 系列（月平均）</li>
+                <li style="padding: 8px 0;">✓ <strong>時間範圍:</strong> 2000-01-01 至 2024-11-28</li>
+            </ul>
+
+            <div class="code-block">
+# Python 程式碼範例
+import yfinance as yf
+import requests
+
+# 抓取 S&P 500 資料
+spx = yf.Ticker("^GSPC")
+df_spx = spx.history(period="max")
+
+# 抓取 FRED 利率資料
+url = f'https://api.stlouisfed.org/fred/series/observations'
+params = {'series_id': 'FEDFUNDS', 'api_key': YOUR_KEY}
+df_rate = requests.get(url, params=params).json()
+            </div>
+        </div>
+
+        <!-- 步驟二：建立模型 -->
+        <div class="section">
+            <h2>步驟二：建立模型（Frame）</h2>
+            <h3>改進版轉折點偵測邏輯</h3>
+            
+            <div class="highlight-box">
+                <strong>核心改進：</strong>使用多時間框架驗證（1/3/6個月），避免被短期波動誤導
+            </div>
+
+            <h4>判斷標準</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="padding: 8px 0;">🔺 <strong>升息啟動:</strong> 3個月變化 > 0.1% 且 6個月變化 > 0.2%</li>
+                <li style="padding: 8px 0;">🟧 <strong>升息暫停:</strong> 從升息趨勢轉為持平（利率高點）</li>
+                <li style="padding: 8px 0;">🔻 <strong>降息啟動:</strong> 3個月變化 < -0.1% 且 6個月變化 < -0.2%</li>
+                <li style="padding: 8px 0;">🟩 <strong>降息暫停:</strong> 從降息趨勢轉為持平（利率低點）</li>
+            </ul>
+
+            <h3>偵測結果</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">29</div>
+                    <div class="stat-label">總轉折點數</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6+6</div>
+                    <div class="stat-label">升息啟動+暫停</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">9+8</div>
+                    <div class="stat-label">降息啟動+暫停</div>
+                </div>
+            </div>
+
+            <div class="image-container">
+                <img src="images/利率路徑與轉折點_20251130_193701.png" alt="利率轉折點路徑圖" style="max-width: 100%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="image-caption" style="display:none; background: #fff3cd; padding: 15px; border-radius: 6px; color: #856404;">⚠️ 圖表檔案待上傳：請將分析圖表放置於 images/ 目錄</p>
+                <p class="image-caption">圖1：聯準會利率路徑與29個自動偵測的轉折點（2000-2024）</p>
+            </div>
+        </div>
+
+        <!-- 步驟三：解釋價格 -->
+        <div class="section">
+            <h2>步驟三：解釋價格（Explain）</h2>
+            <h3>分析框架設計</h3>
+            <p>針對每個轉折點，測試三種進場時機：</p>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h5>📉 轉折前 3 個月</h5>
+                    <p><strong>策略類型：</strong>預期型</p>
+                    <p><strong>優點：</strong>提前布局，可能買在低點</p>
+                    <p><strong>風險：</strong>時間點不準確，可能太早</p>
+                </div>
+                <div class="example-card">
+                    <h5>📊 轉折當月</h5>
+                    <p><strong>策略類型：</strong>即時型</p>
+                    <p><strong>優點：</strong>確認訊號後立即行動</p>
+                    <p><strong>風險：</strong>可能已經漲一段</p>
+                </div>
+                <div class="example-card">
+                    <h5>📈 轉折後 3 個月</h5>
+                    <p><strong>策略類型：</strong>確認型</p>
+                    <p><strong>優點：</strong>趨勢明確，心理壓力小</p>
+                    <p><strong>風險：</strong>錯過最佳進場點</p>
+                </div>
+            </div>
+
+            <h3>關鍵發現 🎯</h3>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>進場時機</th>
+                        <th>6個月平均報酬</th>
+                        <th>12個月平均報酬</th>
+                        <th>6個月勝率</th>
+                        <th>12個月勝率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>轉折前3個月</td>
+                        <td>1.49%</td>
+                        <td>6.48%</td>
+                        <td>60.7%</td>
+                        <td>66.7%</td>
+                    </tr>
+                    <tr>
+                        <td>轉折當月</td>
+                        <td>2.12%</td>
+                        <td>7.95%</td>
+                        <td class="positive">71.4%</td>
+                        <td>66.7%</td>
+                    </tr>
+                    <tr style="background: #e7f3ff;">
+                        <td><strong>轉折後3個月 ⭐</strong></td>
+                        <td class="positive"><strong>4.37%</strong></td>
+                        <td class="positive"><strong>9.98%</strong></td>
+                        <td>66.7%</td>
+                        <td class="positive"><strong>76.9%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box">
+                <h4>重要洞察</h4>
+                <p><strong>「等待確認再進場」策略表現最佳：</strong></p>
+                <ul>
+                    <li>平均報酬率最高（12個月 +9.98%）</li>
+                    <li>長期勝率最高（12個月 76.9%）</li>
+                    <li>心理壓力較小，趨勢已明確</li>
+                </ul>
+            </div>
+
+            <div class="image-container">
+                <img src="images/每次事件報酬熱力圖_20251130_193701.png" alt="每次事件報酬熱力圖" style="max-width: 100%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="image-caption" style="display:none; background: #fff3cd; padding: 15px; border-radius: 6px; color: #856404;">⚠️ 圖表檔案待上傳：請將分析圖表放置於 images/ 目錄</p>
+                <p class="image-caption">圖2：29個事件的報酬率熱力圖（綠色=正報酬，紅色=負報酬）</p>
+            </div>
+        </div>
+
+        <!-- 步驟四：驗證 -->
+        <div class="section">
+            <h2>步驟四：驗證與調整（Validate）</h2>
+            <h3>典型案例分析</h3>
+
+            <div class="example-grid">
+                <div class="example-card" style="border-color: #27ae60; border-width: 3px;">
+                    <h5 style="color: #27ae60;">✓ 最佳案例：2009-03 降息暫停</h5>
+                    <p class="date">金融海嘯底部，市場極度悲觀</p>
+                    <div class="price">
+                        <p><strong>轉折當月進場:</strong></p>
+                        <p>進場: 2009-03-02 $700.82</p>
+                        <p>6月: <span class="positive">+45.63%</span> (出場 $1020.62)</p>
+                        <p>12月: <span class="positive">+59.57%</span> (出場 $1118.31)</p>
+                    </div>
+                </div>
+
+                <div class="example-card" style="border-color: #e74c3c; border-width: 3px;">
+                    <h5 style="color: #e74c3c;">✗ 最差案例：2008-09 降息啟動</h5>
+                    <p class="date">雷曼危機爆發，恐慌性拋售</p>
+                    <div class="price">
+                        <p><strong>轉折當月進場:</strong></p>
+                        <p>進場: 2008-09-02 $1277.58</p>
+                        <p>6月: <span class="negative">-45.14%</span> (出場 $700.82)</p>
+                        <p>12月: <span class="negative">-22.14%</span> (出場 $994.75)</p>
+                    </div>
+                </div>
+
+                <div class="example-card" style="border-color: #3498db; border-width: 3px;">
+                    <h5 style="color: #3498db;">ℹ 最新案例：2024-09 降息啟動</h5>
+                    <p class="date">2024 年首次降息，市場樂觀</p>
+                    <div class="price">
+                        <p><strong>轉折當月進場:</strong></p>
+                        <p>進場: 2024-09-03 $5528.93</p>
+                        <p>6月: <span class="positive">+5.80%</span> (預估 $5849.72)</p>
+                        <p>12月: <span class="positive">+16.63%</span> (預估 $6448.26)</p>
+                    </div>
+                </div>
+
+                <div class="example-card" style="border-color: #f39c12; border-width: 3px;">
+                    <h5 style="color: #f39c12;">⚠ 特殊案例：2008-08 降息暫停</h5>
+                    <p class="date">危機中的暫停，風暴前夕</p>
+                    <div class="price">
+                        <p><strong>轉折後3個月進場:</strong></p>
+                        <p>進場: 2008-11-03 $966.30</p>
+                        <p>6月: <span class="negative">-6.11%</span> (出場 $907.24)</p>
+                        <p>12月: <span class="positive">+8.19%</span> (出場 $1045.41)</p>
+                        <p><em>→ 說明：等待確認後仍能獲利</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>可驗證性 ✅</h3>
+            <div class="verification-section">
+                <h4>每筆交易都可驗證</h4>
+                <p>所有報酬率計算都附帶完整資訊：</p>
+                <ul style="margin-top: 15px;">
+                    <li><strong>實際進場日期</strong> - 非目標日期，而是最近的交易日</li>
+                    <li><strong>進場價格</strong> - S&P 500 當日收盤價</li>
+                    <li><strong>出場日期與價格</strong> - 6個月和12個月後的實際數據</li>
+                    <li><strong>報酬率計算</strong> - (出場價 - 進場價) / 進場價 × 100%</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>範例:</strong> 檔案 <code>利率轉折分析結果_20251130_185037.csv</code> 包含所有 87 筆交易的完整資料</p>
+            </div>
+
+            <h3>框架的局限性</h3>
+            <div class="highlight-box">
+                <p><strong>這個框架無法解釋的情況：</strong></p>
+                <ul>
+                    <li>突發性事件（如 COVID-19、雷曼危機）</li>
+                    <li>地緣政治風險</li>
+                    <li>企業個別事件（財報、醜聞）</li>
+                    <li>市場結構性變化</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>→ 因此需要持續驗證與調整</strong></p>
+            </div>
+        </div>
+
+        <!-- 學習重點 -->
+        <div class="section">
+            <h2>📚 從這個範例學到什麼？</h2>
+            
+            <h3>1. 數據驅動的重要性</h3>
+            <ul>
+                <li>所有轉折點都是從 FRED 數據<strong>自動偵測</strong>，不是主觀判斷</li>
+                <li>使用多時間框架驗證，避免被單一指標誤導</li>
+                <li>每個結論都有<strong>可驗證的數據</strong>支持</li>
+            </ul>
+
+            <h3>2. 框架思維的價值</h3>
+            <ul>
+                <li><strong>可重複：</strong>同樣的框架可以分析其他變數（GDP、EPS、資金流向）</li>
+                <li><strong>可擴展：</strong>可以加入更多時間框架、更多指標</li>
+                <li><strong>可調整：</strong>發現問題後可以系統性改進</li>
+            </ul>
+
+            <h3>3. 取捨</h3>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h5>追求報酬 vs 控制風險</h5>
+                    <p>「轉折前進場」報酬潛力最大，但也最容易遇到假訊號</p>
+                </div>
+                <div class="example-card">
+                    <h5>時機精準 vs 心理壓力</h5>
+                    <p>「轉折後確認」雖然錯過最低點，但趨勢明確，執行更容易</p>
+                </div>
+            </div>
+
+            <h3>4. 持續學習的路徑</h3>
+            <div class="insight-box">
+                <h4>下一步可以做什麼？</h4>
+                <ol>
+                    <li>加入其他變數：GDP 成長率、企業盈餘、資金流向</li>
+                    <li>分析不同市場：債券、黃金、其他國家股市</li>
+                    <li>研究失敗案例：為什麼 2008 年框架失效？</li>
+                    <li>改進模型：加入機器學習、情緒指標</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 技術細節 -->
+        <div class="section">
+            <h2>🔧 技術實作細節</h2>
+            
+            <h3>程式架構</h3>
+            <div class="code-block">
+# 1. 資料收集
+df_spx = yf.download('^GSPC', start='2000-01-01')
+df_rate = get_fred_data('FEDFUNDS', api_key)
+
+# 2. 轉折點偵測
+df_rate['rate_change_3m'] = df_rate['value'].diff(3)
+df_rate['rate_change_6m'] = df_rate['value'].diff(6)
+df_rate['trend'] = identify_trend(df_rate)
+turning_points = detect_turning_points(df_rate)
+
+# 3. 報酬率計算
+for turning_point in turning_points:
+    entry_dates = [
+        turning_point - DateOffset(months=3),
+        turning_point,
+        turning_point + DateOffset(months=3)
+    ]
+    for entry in entry_dates:
+        returns = calculate_returns(entry, df_spx)
+
+# 4. 視覺化與驗證
+plot_heatmap(results)
+plot_rate_path(df_rate, turning_points)
+export_to_csv(results)
+            </div>
+
+            <h3>關鍵函數說明</h3>
+            <ul>
+                <li><code>identify_trend()</code> - 使用多時間框架判斷升息/降息/持平</li>
+                <li><code>detect_turning_points()</code> - 識別四種轉折類型</li>
+                <li><code>calculate_returns()</code> - 計算報酬率並記錄進出場價格</li>
+                <li><code>analyze_by_timing()</code> - 按進場時機統計平均報酬和勝率</li>
+            </ul>
+
+            <h3>產生的檔案</h3>
+            <ol>
+                <li><code>利率轉折分析結果_*.csv</code> - 87筆完整交易記錄</li>
+                <li><code>利率轉折分析圖表_*.png</code> - 統計分析圖表</li>
+                <li><code>每次事件報酬熱力圖_*.png</code> - 報酬率視覺化</li>
+                <li><code>利率路徑與轉折點_*.png</code> - 利率走勢圖</li>
+            </ol>
+        </div>
+
+        <!-- 總結 -->
+        <div class="section">
+            <h2>🎯 總結</h2>
+            
+            <div class="highlight-box">
+                <h4>這個範例展示了完整的投資分析流程</h4>
+                <p><strong>從問題 → 資料 → 模型 → 驗證 → 洞察</strong></p>
+            </div>
+
+            <h3>核心收穫</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">✓</div>
+                    <div class="stat-label">數據驅動決策</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">✓</div>
+                    <div class="stat-label">系統化框架</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">✓</div>
+                    <div class="stat-label">可驗證結果</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 1.1em; text-align: center; color: #2a5298;">
+                <strong>投資不是賭博，而是有系統的資訊處理與決策過程</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>測試範例：利率轉折分析 | 投資學習計畫</p>
+        <p style="margin-top: 10px;">
+            <a href="提案一_單頁式簡報.html">← 返回學習計畫主頁</a> | 
+            最後更新：2025年11月30日
+        </p>
+    </div>
+</body>
+</html>
